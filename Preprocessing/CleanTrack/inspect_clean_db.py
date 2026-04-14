@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 # 1. Locate the database
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 db_path = os.path.join(project_root, 'Data', 'Processed', 'cleaned_data.db')
 
 if not os.path.exists(db_path):
