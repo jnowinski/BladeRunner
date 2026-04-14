@@ -57,5 +57,5 @@ desktop.ini
 
 # Database (SQLite files are now tracked in Git for team sharing)
 # If you want to exclude large database files, uncomment:
-# *.db
+cleaned_data.db
 # *.sqlite
