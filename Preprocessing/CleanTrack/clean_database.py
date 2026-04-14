@@ -1,53 +1,43 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String, Text, JSON
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+import sqlite3
 from contextlib import contextmanager
 
-Base = declarative_base()
-
-class CleanPost(Base):
-    """SQLAlchemy Model for the processed, clean data."""
-    __tablename__ = 'cleaned_posts'
-    
-    id = Column(Integer, primary_key=True)
-    post_id = Column(String(255), unique=True, nullable=False)
-    
-    # Store both so you have a direct comparison for error analysis later
-    original_text = Column(Text)
-    cleaned_text = Column(Text)
-    
-    # Classification targets
-    label = Column(Integer)             # 1 for AI, 0 for Human
-    split_group = Column(String(10))    # 'train', 'val', or 'test'
-    
-    # Transformer Tokens stored natively as JSON arrays!
-    input_ids = Column(JSON)
-    attention_mask = Column(JSON)
-
 class CleanDatabaseManager:
-    """Manages the connection to the new cleaned_data database."""
+    """Manages the connection to the new cleaned_data database using native SQLite."""
     def __init__(self):
         # Route this to the Data/Processed folder
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-        db_path = os.path.join(project_root, 'Data', 'Processed', 'cleaned_data.db')
-        os.makedirs(os.path.dirname(db_path), exist_ok=True)
-        
-        # Initialize SQLAlchemy Engine
-        self.engine = create_engine(f"sqlite:///{db_path}")
-        self.SessionLocal = sessionmaker(bind=self.engine, autocommit=False, autoflush=False)
+        self.db_path = os.path.join(project_root, 'Data', 'Processed', 'cleaned_data.db')
+        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         
     def create_tables(self):
-        Base.metadata.create_all(bind=self.engine)
-        
+        """Creates the cleaned_posts table using a raw SQL command."""
+        create_table_sql = """
+        CREATE TABLE IF NOT EXISTS cleaned_posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id TEXT UNIQUE NOT NULL,
+            original_text TEXT,
+            cleaned_text TEXT,
+            label INTEGER,
+            split_group TEXT,
+            input_ids TEXT,
+            attention_mask TEXT,
+            embeddings TEXT   -- NEW: Stored as JSON strings
+        );
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(create_table_sql)
+            
     @contextmanager
-    def get_session(self):
-        session = self.SessionLocal()
+    def get_connection(self):
+        """Context manager for SQLite database connection."""
+        conn = sqlite3.connect(self.db_path)
         try:
-            yield session
-            session.commit()
+            yield conn
+            conn.commit()
         except Exception:
-            session.rollback()
+            conn.rollback()
             raise
         finally:
-            session.close()
+            conn.close()
