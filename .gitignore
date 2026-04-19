@@ -28,6 +28,7 @@ Scraper/venv/
 venv/
 env/
 ENV/
+Scraper/.env
 
 # Runtime files
 *.pid
@@ -57,5 +58,6 @@ desktop.ini
 
 # Database (SQLite files are now tracked in Git for team sharing)
 # If you want to exclude large database files, uncomment:
-# *.db
+*.db
 # *.sqlite
+Data/Scraped/scraper.db
