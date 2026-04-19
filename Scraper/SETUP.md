@@ -11,16 +11,6 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-## 2. Database Setup (Automatic!)
-
-**No setup needed!** SQLite database is created automatically at `data/scraper.db` on first run.
-
-**Bonus**: You can commit this file to Git to share data with your team:
-```powershell
-git add data\scraper.db
-git commit -m "Add scraped posts"
-git push
-```
 
 ## 3. Configure Credentials
 
@@ -101,12 +91,8 @@ del scraper.pid
 python scraper.py start
 ```
 
-## Next Steps
-
 1. Customize search queries in `config.py`
 2. Adjust poll intervals for each platform
-3. Query the database to analyze collected posts
-4. Build your classification pipeline on top of the data
 
 ---
 

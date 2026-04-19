@@ -1,0 +1,22 @@
+{
+  "total_samples": 35386,
+  "platforms": {
+    "bluesky": 28164,
+    "reddit": 7222
+  },
+  "generated_at": "2026-04-08T19:29:34.494747",
+  "min_length": 10,
+  "max_length": 1000,
+  "length_stats": {
+    "mean": 196.94868026903296,
+    "median": 173.0,
+    "min": 10,
+    "max": 1000
+  },
+  "database_path": "Data/Scraped/scraper.db",
+  "quality_filters": {
+    "min_text_length": 10,
+    "max_text_length": 1000,
+    "non_empty": true
+  }
+}

@@ -2,14 +2,17 @@
 Configuration settings for the social media scraper.
 """
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from .env file at project root
+project_root = Path(__file__).parent.parent
+env_path = project_root / '.env'
+load_dotenv(dotenv_path=env_path)
 
 # Database Configuration
 DATABASE_CONFIG = {
-    'db_path': os.getenv('DB_PATH', '../Data/Scraped/scraper.db'),
+    'db_path': os.getenv('DB_PATH', str(project_root / 'Data' / 'Scraped' / 'scraper.db')),
 }
 
 # Twitter/X API Configuration
@@ -35,6 +38,70 @@ THREADS_CONFIG = {
     'access_token': os.getenv('THREADS_ACCESS_TOKEN'),
 }
 
+# ========================================
+# Synthetic Data Generation API Configurations
+# ========================================
+
+# Azure OpenAI Configuration (GPT-5-mini, GPT-4.1-nano)
+AZURE_OPENAI_CONFIG = {
+    'api_key': os.getenv('AZURE_OPENAI_API_KEY'),
+    'endpoint': os.getenv('AZURE_OPENAI_ENDPOINT'),  # e.g., https://{resource}.openai.azure.com/
+    'api_version': os.getenv('AZURE_OPENAI_API_VERSION', '2024-08-01-preview'),
+    'deployments': {
+        'gpt54_nano': os.getenv('AZURE_GPT54_NANO_DEPLOYMENT', 'gpt-5.4-nano'),
+        'gpt41_mini': os.getenv('AZURE_GPT41_MINI_DEPLOYMENT', 'gpt-4.1-mini'),
+    },
+}
+
+# Anthropic Claude Configuration
+CLAUDE_CONFIG = {
+    'api_key': os.getenv('CLAUDE_API_KEY'),
+    'model': os.getenv('CLAUDE_MODEL', 'claude-3-5-sonnet-20241022'),
+}
+
+# Google Gemini Configuration
+GEMINI_CONFIG = {
+    'api_key': os.getenv('GEMINI_API_KEY'),
+    'model': os.getenv('GEMINI_MODEL', 'gemini-1.5-flash'),
+}
+
+# Groq Configuration (for Llama)
+GROQ_CONFIG = {
+    'api_key': os.getenv('GROQ_API_KEY'),
+    'model': os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile'),
+}
+
+# DeepSeek Configuration
+DEEPSEEK_CONFIG = {
+    'api_key': os.getenv('DEEPSEEK_API_KEY'),
+    'model': os.getenv('DEEPSEEK_MODEL', 'deepseek-chat'),
+    'base_url': os.getenv('DEEPSEEK_BASE_URL', 'https://api.deepseek.com'),
+}
+
+# Generation Configuration
+GENERATION_CONFIG = {
+    # Model distribution (must sum to 100)
+    'model_distribution': {
+        'gpt54_nano': 33.0,     # GPT-5.4-nano (Azure)
+        'gpt41_mini': 33.0,     # GPT-4.1-mini (Azure)
+        'claude': 20.0,         # Claude Sonnet 4-6
+        'gemini': 0.0,          # Gemini 2.5 Flash (disabled)
+        'llama': 14.0,          # Llama 4 Scout via Groq
+        'deepseek': 0.0,        # DeepSeek-V3 (disabled)
+    },
+    
+    # Few-shot prompt configuration
+    'samples_per_prompt': 12,  # Number of real examples to include per generation
+    
+    # Budget and safety limits
+    'max_budget_usd': 50,       # Hard cap on spending
+    'cost_per_1k_tracking': True,
+    
+    # Batch processing settings
+    'use_batch_when_available': True,
+    'batch_wait_timeout_hours': 48,
+}
+
 # Scraper Configuration
 SCRAPER_CONFIG = {
     # Poll intervals in minutes
@@ -53,6 +120,15 @@ SCRAPER_CONFIG = {
             'AI OR "Machine Learning" OR "Artificial Intelligence"',
             'ChatGPT OR GPT OR "large language models"',
             'Python programming',
+            # Software Development & AI Coding
+            'vibecoding OR "vibe coding"',
+            '"AI generated code" OR "ChatGPT code" OR "Copilot code"',
+            '"coding with AI" OR "AI pair programming"',
+            '"10x engineer" OR "10x developer"',
+            'leetcode OR "coding interview" OR "tech interview"',
+            '#100DaysOfCode OR "learning to code"',
+            '"junior developer" OR "bootcamp graduate"',
+            'webdev OR "web development" OR frontend OR backend',
             # News & Current Events
             'breaking news',
             'world news',
@@ -82,6 +158,27 @@ SCRAPER_CONFIG = {
             'technology',
             'programming',
             'datascience',
+            # Software Development (High AI Usage)
+            'learnprogramming',
+            'webdev',
+            'cscareerquestions',
+            'experienceddevs',
+            'coding',
+            'codinghelp',
+            'leetcode',
+            'csMajors',
+            'webdevelopment',
+            'javascript',
+            'python',
+            'react',
+            'node',
+            'Frontend',
+            'Backend',
+            'devops',
+            'softwareengineering',
+            'ProgrammerHumor',
+            'badcode',
+            'programminghorror',
             # News
             'news',
             'worldnews',
@@ -133,6 +230,26 @@ SCRAPER_CONFIG = {
             'Machine Learning',
             'technology',
             'programming',
+            # Software Development & AI Coding
+            'vibecoding',
+            'vibe coding',
+            'AI generated code',
+            'coding with AI',
+            'ChatGPT code',
+            'GitHub Copilot',
+            'AI pair programming',
+            '10x engineer',
+            'coding interview',
+            'tech interview',
+            'leetcode',
+            '100DaysOfCode',
+            'learning to code',
+            'bootcamp',
+            'junior developer',
+            'web development',
+            'webdev',
+            'frontend',
+            'backend',
             # News
             'breaking news',
             'world news',
