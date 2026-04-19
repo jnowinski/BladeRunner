@@ -14,7 +14,8 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, Session
 from sqlalchemy.pool import QueuePool
-from config import DATABASE_CONFIG
+
+from Scraper.config import DATABASE_CONFIG
 
 Base = declarative_base()
 
